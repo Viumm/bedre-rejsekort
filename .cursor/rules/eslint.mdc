@@ -1,0 +1,7 @@
+---
+alwaysApply: false
+---
+
+Run `pnpm lint` and fix all linting errors like a senior developer. Don't disable lint rules or modify ESLint, and don't just use underscores as a shortcut. If you're unsure how to resolve something, look it up online and apply the correct solution.
+
+After that, run `npx tsc --noEmit` to check for TypeScript compile errors, and lastly build until successful.

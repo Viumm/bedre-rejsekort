@@ -1,0 +1,156 @@
+---
+alwaysApply: true
+---
+
+# File Structure - Feature-Based Architecture
+
+## Core Structure
+
+```
+/src/
+├── app/                    # Next.js routing ONLY (pages, layouts, api)
+│
+├── features/               # Page-level features (vertical slices)
+│   └── [feature-name]/
+│       ├── components/     # Feature-specific UI
+│       ├── actions/        # Server actions (thin wrappers)
+│       ├── hooks/          # Feature-specific hooks
+│       └── types/          # Feature-specific types
+│
+├── shared/                 # Shared across features
+│   ├── features/           # Shared features
+│   │   └── [feature-name]/
+│   │       ├── components/
+│   │       ├── actions/
+│   │       ├── hooks/
+│   │       └── types/
+│   │
+│   └── sections/           # Shared mini-features (widgets)
+│       └── [section-name]/
+│           ├── components/ # Reusable composite UI
+│           ├── actions/    # Shared business logic
+│           ├── hooks/      # Shared hooks
+│           └── types/      # Shared types
+│
+├── components/             # UI primitives only
+│   └── ui/                 # Base components (button, dialog, input)
+│
+├── lib/                    # Infrastructure & services
+│   ├── database/           # DB client, schema, queries
+│   ├── auth/               # Authentication service
+│   └── [service-name]/     # External service integrations
+│
+├── providers/              # React context providers
+│   ├── auth-provider.tsx   # Auth context
+│   ├── theme-provider.tsx  # Theme context
+│   └── [provider-name].tsx # Other providers
+│
+└── utils/                  # Pure utility functions (no imports)
+    └── [util-name].ts      # Helper functions
+```
+
+## FSD Dependency Flow (STRICT)
+
+```
+app/ (Pages)
+  ↓
+shared/sections/ (Widgets)
+  ↓
+shared/features/ (Shared Features)
+  ↓
+features/ (Features)
+  ↓
+components/ui/ (Shared UI)
+  ↓
+providers/ (Context Providers)
+  ↓
+lib/ (Infrastructure)
+  ↓
+utils/ (Pure functions)
+```
+
+**CRITICAL RULE:** Higher layers can import lower layers. NEVER reverse.
+
+## Decision Tree
+
+**Where should this code go?**
+
+1. **Is it ONLY routing/pages?** → `/app/`
+2. **Used in 1 feature only?** → `/features/[feature]/`
+3. **Shared feature used in multiple places?** → `/shared/features/[name]/`
+4. **Shared widget with UI + actions?** → `/shared/sections/[name]/`
+5. **Simple UI primitive (button, input)?** → `/components/ui/`
+6. **React context provider?** → `/providers/`
+7. **Infrastructure (DB, SDK)?** → `/lib/`
+8. **Pure utility function?** → `/utils/`
+
+## Examples
+
+### Feature (page-level)
+```
+/features/posts/
+├── components/post-list/
+├── actions/get-posts.ts
+├── hooks/use-post-form.ts
+└── types/index.ts
+```
+
+### Shared Feature
+```
+/shared/features/search/
+├── components/search-bar/
+├── actions/search.ts
+├── hooks/use-search.ts
+└── types/index.ts
+```
+
+### Shared Section (widget)
+```
+/shared/sections/comments/
+├── components/comment-thread.tsx
+├── actions/create-comment.ts
+├── hooks/use-comments.ts
+└── types/index.ts
+```
+
+### UI Primitive
+```
+/components/ui/
+├── button.tsx
+├── dialog.tsx
+└── input.tsx
+```
+
+## Anti-Patterns (NEVER DO THIS)
+
+```
+/app/shared/              # App is routing only
+/app/components/          # App is routing only
+/shared/sections/X imports from /features/Y  # Dependency inversion
+/utils/ imports from /lib/  # Utils must be pure
+```
+
+## Composition Pattern (For Sections)
+
+```typescript
+// CORRECT - Section receives logic via props
+export function CommentForm({ onSubmit, onCancel }) {
+  return <form onSubmit={onSubmit}>...</form>
+}
+
+// WRONG - Section imports feature logic
+import { usePosts } from '@/features/posts'  // NO!
+```
+
+## Summary
+
+- **Pages** (`/app/`) = Routes only
+- **Widgets** (`/shared/sections/`) = Reusable widgets (composition pattern)
+- **Shared Features** (`/shared/features/`) = Reusable features across pages
+- **Features** (`/features/`) = Page-level vertical slices
+- **UI** (`/components/ui/`) = Primitives only
+- **Providers** (`/providers/`) = React context providers
+- **Lib** (`/lib/`) = Infrastructure
+- **Utils** (`/utils/`) = Pure functions
+
+**Follow dependency flow. Use composition for sections. Keep features isolated.**

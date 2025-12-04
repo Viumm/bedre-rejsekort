@@ -1,0 +1,19 @@
+---
+alwaysApply: true
+---
+
+# BettingTools Platform - Project Information
+
+This project is a betting analytics and tipster platform that allows users to track bets, analyze performance, and follow profitable tipsters.
+
+Built with Next.js 15 (App Router), TypeScript, and Prisma ORM with strong emphasis on type safety.
+
+- It's deployed on Vercel
+- Database is Neon serverless Postgres with Prisma ORM
+- Authentication is Firebase Auth with session cookies
+- File storage is Google Cloud Storage for profile pictures and assets
+- Caching is Redis (Upstash) for user data and performance optimization
+- Payment processing is Stripe for subscriptions and billing
+- Cloud functions are Firebase Functions for background processing
+- Monitoring is Sentry for error tracking
+- External tipster data comes from Supabase integration

@@ -12,7 +12,7 @@ interface HeaderProps {
 export function Header({ showBack, showBell = true, onBack }: HeaderProps) {
   return (
     <header 
-      className="bg-[#1734D8] px-3 pb-3 flex items-center"
+      className="bg-[#1734D8] px-3 pb-3 flex items-center sticky top-0 z-50"
       style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 12px)" }}
     >
       {/* Left side - fixed width for centering */}

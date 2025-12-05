@@ -144,7 +144,7 @@ export function CheckInSlider({
     >
       {/* "Check in" text on the right */}
       <div className="absolute right-6 top-1/2 -translate-y-1/2">
-        <span className="text-black font-medium text-[18px]">Check in</span>
+        <span className="text-black font-semibold text-[15px]">Check in</span>
       </div>
 
       {/* Green check-in button on the left with white border */}

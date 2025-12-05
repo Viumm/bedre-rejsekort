@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { ActiveTicket } from "../types";
+import { type ActiveTicket, calculateAge } from "../types";
 
 interface TicketDisplayProps {
   ticket: ActiveTicket;
@@ -32,11 +32,13 @@ export function TicketDisplay({ ticket, currentTime }: TicketDisplayProps) {
         />
       </div>
 
-      {/* Timer bar - horizontal gradient coral to pink */}
+      {/* Timer bar - horizontal gradient with animation */}
       <div 
-        className="h-[60px] flex items-center justify-center flex-shrink-0"
+        className="h-[62px] flex items-center justify-center flex-shrink-0 animate-gradient-shift"
         style={{
-          background: "linear-gradient(90deg, #fa6a52 0%, #d8446a 25%, #c82886 50%, #d8446a 75%, #fa6a52 100%)",
+          backgroundImage: "linear-gradient(90deg, #fa6a52 0%, #d8446a 25%, #c82886 50%, #d8446a 75%, #fa6a52 100%)",
+          backgroundSize: "150% 100%",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <span className="text-white text-[42px] font-bold tabular-nums" style={{ letterSpacing: '2px' }}>
@@ -45,45 +47,51 @@ export function TicketDisplay({ ticket, currentTime }: TicketDisplayProps) {
       </div>
 
       {/* Valid from - blue bar */}
-      <div className="bg-[#1734D8] h-[60px] flex items-center justify-center flex-shrink-0">
+      <div className="bg-[#1734D8] h-[62px] flex items-center justify-center flex-shrink-0">
         <span className="text-white text-[14px]">
           Valid from  <span className="font-bold">{formatDate(ticket.validFrom)}</span>
         </span>
       </div>
 
       {/* Station info */}
-      <div className="px-4 py-4 border-b border-[#E8E8E8] flex-shrink-0 bg-white">
-        <div className="flex justify-between items-center">
-          <div className="flex-1 min-w-0 pr-3">
-            <p className="text-[14px] text-black mb-0.5">From</p>
-            <p className="font-semibold text-black text-[20px] leading-tight">{ticket.station.name}</p>
-            <p className="font-semibold text-black text-[20px]">({ticket.station.municipality})</p>
+      <div className="px-4 py-3 flex-shrink-0 bg-white">
+        <div className="flex justify-between">
+          <div className="flex-1 min-w-0 pr-3 overflow-hidden">
+            <p className="text-[11px] text-black mb-0.5">From</p>
+            <p className="font-semibold text-black text-[16px] leading-snug" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
+              {ticket.station.municipality && !ticket.station.name.includes(ticket.station.municipality)
+                ? `${ticket.station.name} (${ticket.station.municipality})`
+                : ticket.station.name}
+            </p>
           </div>
-          <span className="flex-shrink-0 px-4 py-2 bg-[#EFEFEF] rounded text-[15px] text-black border border-[#D5D5D5]">
+          <span className="flex-shrink-0 self-center px-1.5 py-0.5 bg-[#dce1ec] rounded text-[13px] text-[#333333] font-semibold border border-[#E0E0E0]">
             {ticket.passenger.travelClass}
           </span>
         </div>
       </div>
 
+      {/* Divider with margins */}
+      <div className="mx-4 border-b border-[#F0F0F0]" />
+
       {/* Passenger info */}
-      <div className="px-4 py-4 border-b border-[#E8E8E8] flex-shrink-0 bg-white">
-        <div className="flex justify-between items-center">
+      <div className="px-4 py-3 border-b border-[#F0F0F0] flex-shrink-0 bg-white">
+        <div className="flex justify-between">
           <div>
-            <p className="text-[14px] text-black mb-0.5">Passenger</p>
-            <p className="font-semibold text-black text-[20px]">{ticket.passenger.fullName}</p>
-            <p className="text-black text-[15px]">
-              {ticket.passenger.birthDate} · {ticket.passenger.age} years
+            <p className="text-[11px] text-black mb-0.5">Passenger</p>
+            <p className="font-semibold text-black text-[16px]">{ticket.passenger.fullName}</p>
+            <p className="text-black text-[16px]">
+              {ticket.passenger.birthDate} · {calculateAge(ticket.passenger.birthDate)} years
             </p>
           </div>
-          <span className="flex-shrink-0 px-4 py-2 bg-[#EFEFEF] rounded text-[15px] text-black border border-[#D5D5D5]">
+          <span className="flex-shrink-0 self-end px-1.5 py-0.5 bg-[#dce1ec] rounded text-[13px] text-[#333333] font-semibold border border-[#E0E0E0]">
             {ticket.passenger.type}
           </span>
         </div>
       </div>
 
       {/* Ticket ID */}
-      <div className="py-5 text-center flex-1 bg-white">
-        <p className="text-[13px] text-[#888888]">
+      <div className="pt-2 pb-12 text-center flex-1 bg-white">
+        <p className="text-[11px] text-black">
           Ticket-ID: {ticket.ticketId}
         </p>
       </div>

@@ -1,4 +1,5 @@
 export { StationList } from "./station-list";
+export { StationSearch } from "./station-search";
 export { PassengerList } from "./passenger-list";
 export { CheckInSlider } from "./check-in-slider";
 export { TicketDisplay } from "./ticket-display";

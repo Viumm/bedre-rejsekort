@@ -22,12 +22,12 @@ export function TicketDisplay({ ticket, currentTime }: TicketDisplayProps) {
   return (
     <div className="flex flex-col bg-white w-full h-full">
       {/* QR Code Section - using pendlerkort image */}
-      <div className="relative flex-shrink-0 flex-1 min-h-[380px] w-full">
+      <div className="relative flex-shrink-0 flex-1 min-h-[380px] w-full overflow-hidden">
         <Image
           src="/pendlerkort.png"
           alt="Ticket barcode"
           fill
-          className="object-cover"
+          className="object-cover scale-130"
           priority
         />
       </div>
